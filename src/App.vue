@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <c-nav :menu="menu"></c-nav>
+    222211
     <router-view />
     3333
   </div>
