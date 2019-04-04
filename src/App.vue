@@ -2,6 +2,7 @@
   <div id="app">
     <c-nav :menu="menu"></c-nav>
     <router-view />
+    222
   </div>
 </template>
 <script>
