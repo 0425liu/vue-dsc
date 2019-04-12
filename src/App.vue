@@ -11,6 +11,7 @@ import Nav from "@/components/Nav";
 export default {
   data() {
     return {
+      isRouterAlive: true,
       menu: [
         {
           name: "查看修改DCS",
@@ -35,5 +36,7 @@ export default {
   top: 0;
   bottom: 0;
   overflow: auto;
+  right: 0;
+  padding: 10px;
 }
 </style>
