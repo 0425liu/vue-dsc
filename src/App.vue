@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <c-nav :menu="menu"></c-nav>
-    <router-view />
+    <div class="container">
+      <router-view />
+    </div>
   </div>
 </template>
 <script>
@@ -9,13 +11,14 @@ import Nav from "@/components/Nav";
 export default {
   data() {
     return {
+      isRouterAlive: true,
       menu: [
         {
-          name: "查看修改DSC",
-          path: "/home"
+          name: "查看修改DCS",
+          path: "/"
         },
         {
-          name: "新增DSC",
+          name: "新增DCS",
           path: "/addDscInfo"
         }
       ]
@@ -26,3 +29,14 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.container {
+  position: absolute;
+  left: 250px;
+  top: 0;
+  bottom: 0;
+  overflow: auto;
+  right: 0;
+  padding: 10px;
+}
+</style>
