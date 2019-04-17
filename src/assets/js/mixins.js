@@ -8,7 +8,7 @@ export const getLayout = {
           this.src = results.image;
           this.data = results.data;
           this.name = name;
-          callback || callback();
+          callback && callback();
         });
       }
     }
