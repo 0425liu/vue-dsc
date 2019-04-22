@@ -58,6 +58,7 @@
         :current="current"
         @handleClick="handleClick"
         @handleDelete="handleDelete"
+        :hasEvent="true"
       ></dcs-output>
     </div>
   </div>
