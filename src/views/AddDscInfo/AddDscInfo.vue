@@ -58,6 +58,7 @@
         :current="current"
         @handleClick="handleClick"
         @handleDelete="handleDelete"
+        :hasEvent="true"
       ></dcs-output>
     </div>
   </div>
@@ -210,7 +211,7 @@ export default {
       console.error("Your browser does not support FileReader API!");
     }
     this.fileReader = new FileReader();
-    this.updateLayout(this.setData());
+    this.updateLayout(this.setData);
   }
 };
 </script>
