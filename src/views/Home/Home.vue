@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="label-wrap">
+    <label>设备名称</label>
     <el-select v-model="name" placeholder="请选择" @change="handleChange">
       <el-option
         v-for="item in options"

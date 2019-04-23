@@ -29,3 +29,14 @@
   left: 100px;
   font-size: 32px;
 }
+.label-wrap {
+  overflow: hidden;
+}
+.label-wrap>label {
+  width: 80px;
+  font-size: 14px;
+  display: inline-block
+}
+.f-l {
+  float: left;
+}
