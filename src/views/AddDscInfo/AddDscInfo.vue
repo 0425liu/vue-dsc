@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="label-wrap">
-      <label>设备名称</label>
+      <label>系统名称</label>
       <el-input
         v-model="name"
         placeholder="请输设备名字"
@@ -30,8 +30,6 @@
           placeholder="文字测点ID"
           class="input"
         ></el-input>
-        <el-input class="input" v-model="value" placeholder="初始值"></el-input>
-        <el-input v-model="unit" placeholder="单位" class="input"></el-input>
         <span class="add" @click="addTextMark">添加</span>
       </div>
       <div class="label-wrap">
@@ -96,8 +94,6 @@ export default {
       ],
       name: "",
       id: "",
-      value: "",
-      unit: "",
       key: "",
       icon: ""
     };
@@ -121,21 +117,30 @@ export default {
       this.$message.warning("请先删除再更换图片");
     },
     addTextMark() {
-      let { id, value, unit } = this;
-      if (id === "" || value === "" || unit === "") {
-        this.$message.error("请填写文字测点ID、初始值、单位");
+      let { id } = this;
+      if (id === "") {
+        this.$message.error("请填写文字测点ID");
         return;
       }
-      const textObj = {
-        left: "50%",
-        top: "50%",
-        key: this.id,
-        class: "mark-value",
-        html: `${this.value}<span>${this.unit}</span>`
-      };
-      this.data.push(textObj);
-      this.clearTextInput();
-      this.getCurrent(this.data.length - 1);
+      const param = { name: id };
+      this.$get("api/Page/GetPointUnit", param, { showLoading: false }).then(
+        res => {
+          if (res.msg == "无数据" || !res.results) {
+            this.$message.error("数据查找不到对应的测点ID");
+            return;
+          }
+          const textObj = {
+            left: "50%",
+            top: "50%",
+            key: this.id,
+            class: "mark-value",
+            html: `0<span>${res.results}</span>`
+          };
+          this.data.push(textObj);
+          this.clearTextInput();
+          this.getCurrent(this.data.length - 1);
+        }
+      );
     },
     addIconMark() {
       let { key, icon } = this;
@@ -157,7 +162,6 @@ export default {
     clearTextInput() {
       this.id = "";
       this.unit = "";
-      this.value = "";
     },
     handleSave() {
       if (this.name === "") {
@@ -185,7 +189,6 @@ export default {
     reset() {
       this.id = "";
       this.unit = "";
-      this.value = "";
       this.show = false;
       this.data = [];
       this.current = 0;
@@ -229,7 +232,7 @@ export default {
 }
 .input {
   display: inline-block;
-  width: 280px;
+  width: 180px;
   margin-right: 15px;
 }
 .file {
@@ -266,5 +269,6 @@ export default {
 .radio-group {
   padding-bottom: 15px;
   margin-left: 80px;
+  width: 1360px;
 }
 </style>

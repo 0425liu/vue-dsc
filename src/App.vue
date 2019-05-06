@@ -14,7 +14,7 @@ export default {
       isRouterAlive: true,
       menu: [
         {
-          name: "查看修改DCS",
+          name: "编辑DCS",
           path: "/"
         },
         {
