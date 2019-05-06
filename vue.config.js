@@ -8,5 +8,8 @@ module.exports = {
         images: "@/images"
       }
     }
+  },
+  css: {
+    sourceMap: true // css预设器配置项
   }
 };
