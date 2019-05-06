@@ -1,53 +1,47 @@
 <template>
   <div>
-    <el-row :gutter="20">
-      <el-col :span="6">
-        <el-input v-model="name" placeholder="请输设备名字"></el-input>
-      </el-col>
-      <el-col :span="3">
-        <el-upload
-          class="upload-demo"
-          ref="upload"
-          action="AddImage"
-          :http-request="httpRequest"
-          :limit="limit"
-          :on-exceed="handleExceed"
-        >
-          <el-button size="small" type="primary">点击上传</el-button>
-        </el-upload>
-      </el-col>
-      <el-col :span="6" v-show="show">
-        <el-button type="success" @click="handleSave">保存</el-button>
-      </el-col>
-    </el-row>
+    <div class="label-wrap">
+      <label>系统名称</label>
+      <el-input
+        v-model="name"
+        placeholder="请输设备名字"
+        class="input"
+      ></el-input>
+
+      <el-upload
+        class="file"
+        ref="upload"
+        action="AddImage"
+        :http-request="httpRequest"
+        :limit="limit"
+        :on-exceed="handleExceed"
+      >
+        <span>点击上传</span>
+      </el-upload>
+      <el-button v-if="show" type="success" @click="handleSave" class="save-btn"
+        >保存</el-button
+      >
+    </div>
     <div v-show="show">
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <el-input v-model="id" placeholder="文字测点ID"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-input v-model="value" placeholder="初始值"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-input v-model="unit" placeholder="单位"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-button type="primary" @click="addTextMark"
-            >增加文字标注</el-button
-          >
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <el-input v-model="key" placeholder="图标测点ID"></el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-button type="primary" @click="addIconMark"
-            >增加图形标注</el-button
-          >
-        </el-col>
-      </el-row>
-      <el-radio-group v-model="icon">
+      <div class="label-wrap">
+        <label>文字标注</label>
+        <el-input
+          v-model="id"
+          placeholder="文字测点ID"
+          class="input"
+        ></el-input>
+        <span class="add" @click="addTextMark">添加</span>
+      </div>
+      <div class="label-wrap">
+        <label>图形标注</label>
+        <el-input
+          v-model="key"
+          placeholder="图标测点ID"
+          class="input"
+        ></el-input>
+        <span class="add" @click="addIconMark">添加</span>
+      </div>
+      <el-radio-group v-model="icon" class="radio-group">
         <el-radio v-for="(item, index) in icons" :key="index" :label="item">
           <span v-html="item"></span>
         </el-radio>
@@ -100,8 +94,6 @@ export default {
       ],
       name: "",
       id: "",
-      value: "",
-      unit: "",
       key: "",
       icon: ""
     };
@@ -125,21 +117,30 @@ export default {
       this.$message.warning("请先删除再更换图片");
     },
     addTextMark() {
-      let { id, value, unit } = this;
-      if (id === "" || value === "" || unit === "") {
-        this.$message.error("请填写文字测点ID、初始值、单位");
+      let { id } = this;
+      if (id === "") {
+        this.$message.error("请填写文字测点ID");
         return;
       }
-      const textObj = {
-        left: "0",
-        top: "0",
-        key: this.id,
-        class: "mark-value",
-        html: `${this.value}<span>${this.unit}</span>`
-      };
-      this.data.push(textObj);
-      this.clearTextInput();
-      this.getCurrent(this.data.length - 1);
+      const param = { name: id };
+      this.$get("api/Page/GetPointUnit", param, { showLoading: false }).then(
+        res => {
+          if (res.msg == "无数据" || !res.results) {
+            this.$message.error("数据查找不到对应的测点ID");
+            return;
+          }
+          const textObj = {
+            left: "50%",
+            top: "50%",
+            key: this.id,
+            class: "mark-value",
+            html: `0<span>${res.results}</span>`
+          };
+          this.data.push(textObj);
+          this.clearTextInput();
+          this.getCurrent(this.data.length - 1);
+        }
+      );
     },
     addIconMark() {
       let { key, icon } = this;
@@ -148,19 +149,19 @@ export default {
         return;
       }
       const iconObj = {
-        left: "0",
-        top: "0",
+        left: "50%",
+        top: "50%",
         key: this.key,
         class: "ico-wrap",
         html: this.icon
       };
       this.data.push(iconObj);
+      this.key = "";
       this.getCurrent(this.data.length - 1);
     },
     clearTextInput() {
       this.id = "";
       this.unit = "";
-      this.value = "";
     },
     handleSave() {
       if (this.name === "") {
@@ -188,7 +189,6 @@ export default {
     reset() {
       this.id = "";
       this.unit = "";
-      this.value = "";
       this.show = false;
       this.data = [];
       this.current = 0;
@@ -224,9 +224,51 @@ export default {
 .el-radio {
   width: 100px;
   margin-right: 0;
+  font-size: 30px;
   /deep/.el-radio__label {
     display: inline-block;
     vertical-align: middle;
   }
+}
+.input {
+  display: inline-block;
+  width: 180px;
+  margin-right: 15px;
+}
+.file {
+  display: inline-block;
+  /deep/.el-upload-list {
+    display: inline-block;
+  }
+  /deep/.el-upload-list__item {
+    line-height: normal;
+    &:first-child {
+      margin-top: 0;
+      margin-left: 15px;
+    }
+  }
+
+  span {
+    color: #46b1fe;
+    text-decoration: underline;
+  }
+}
+.add {
+  display: inline-block;
+  color: #46b1fe;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.label-wrap {
+  padding-bottom: 15px;
+}
+.save-btn {
+  margin-left: 15px;
+  display: inline-block;
+}
+.radio-group {
+  padding-bottom: 15px;
+  margin-left: 80px;
+  width: 1360px;
 }
 </style>

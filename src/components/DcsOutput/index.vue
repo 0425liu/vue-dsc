@@ -3,7 +3,7 @@
     <img :src="src" @dragstart.prevent />
     <div
       v-for="(item, index) in data"
-      :key="item.key"
+      :key="index"
       :class="item.class"
       :style="{ left: item.left, top: item.top }"
       v-drag="{
@@ -14,7 +14,12 @@
       @click="handleClick(index)"
     >
       <div v-html="item.html" :title="item.key"></div>
-
+      <i
+        class="el-icon-edit"
+        v-if="index === current && hasEvent"
+        @click.stop="handleEdit"
+        @mousedown.stop
+      ></i>
       <i
         class="el-icon-error"
         v-if="index === current && hasEvent"
@@ -22,11 +27,28 @@
         @mousedown.stop
       ></i>
     </div>
+    <el-dialog title="测点ID" :visible.sync="dialogVisible" width="30%">
+      <el-input
+        v-model="dialogId"
+        placeholder="文字测点ID"
+        class="input"
+      ></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleUpdate">修 改</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      dialogVisible: false,
+      dialogId: ""
+    };
+  },
   props: {
     src: String,
     data: Array,
@@ -49,6 +71,16 @@ export default {
       if (this.hasEvent) {
         this.$emit("handleDelete");
       }
+    },
+    handleEdit() {
+      if (this.hasEvent) {
+        this.dialogVisible = true;
+        this.dialogId = this.data[this.current].key;
+      }
+    },
+    handleUpdate() {
+      this.data[this.current].key = this.dialogId;
+      this.dialogVisible = false;
     },
     movePos(x, y) {
       this.data[this.current].left = x;

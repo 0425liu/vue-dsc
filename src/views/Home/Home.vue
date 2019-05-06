@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="label-wrap">
+    <label>系统名称</label>
     <el-select v-model="name" placeholder="请选择" @change="handleChange">
       <el-option
         v-for="item in options"
@@ -14,11 +15,13 @@
       icon="el-icon-edit"
       class="btn"
       @click="handleEdit"
+      v-if="name"
     ></el-button>
     <el-button
       type="danger"
       icon="el-icon-delete"
       @click="handleDeleteDsc"
+      v-if="name"
     ></el-button>
     <dcs-output :src="src" :data="data"></dcs-output>
   </div>
