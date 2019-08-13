@@ -1,9 +1,10 @@
-import { config } from "./config";
 import Axios from "axios";
 import qs from "qs";
 import { Loading } from "element-ui";
 import _ from "lodash";
-const api = config.pro;
+console.log(process.env);
+const api = process.env.VUE_APP_BASE_API;
+console.log(api);
 /**
  * 封装post请求
  * @param url
